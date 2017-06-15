@@ -12,7 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
     EditText editName, editCount, editResultName, editResultCount;
-    Button butInit, butInsert, butSelect;
+    Button butInit, butInsert, butSelect, butUpdate, butDelete;
     MyDBHelper myHelper;
     SQLiteDatabase sqlDb;
     @Override
@@ -26,6 +26,9 @@ public class MainActivity extends AppCompatActivity {
         butInit=(Button)findViewById(R.id.but_init);
         butInsert=(Button)findViewById(R.id.but_insert);
         butSelect=(Button)findViewById(R.id.but_select);
+        butUpdate=(Button)findViewById(R.id.but_update);
+        butDelete=(Button)findViewById(R.id.but_delete);
+
 //DB 생성
         myHelper=new MyDBHelper(this);
 //기존의 테이블이 존재하면 삭제하고 테이블을 새로 생성한다.
@@ -57,6 +60,27 @@ public class MainActivity extends AppCompatActivity {
                 String counts="Idol 인원수"+"\r\n"+"==========="+"\r\n";
                 while (cursor.moveToNext()){
                 }
+            }
+        });
+
+        butInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sqlDb=myHelper.getWritableDatabase();
+                String sql="update idolTable set idolCount="+editCount.getText()+" where idolName='"+editName.getText()+"'";
+                sqlDb.execSQL(sql);
+                sqlDb.close();
+                Toast.makeText(MainActivity.this, "인원수가 수정됨", Toast.LENGTH_LONG).show();
+            }
+        });
+        butInsert.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                sqlDb=myHelper.getWritableDatabase();
+                String sql="delete from idolTable where idolName='"+editName.getText()+"'";
+                sqlDb.execSQL(sql);
+                sqlDb.close();
+                Toast.makeText(MainActivity.this, "삭제되었음", Toast.LENGTH_LONG).show();
             }
         });
     }
